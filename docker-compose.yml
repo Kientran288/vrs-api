@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: spg
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+    command: -p 5432
+    restart: always
+
+
+  vsr-api:
+    container_name: vsr-api
+    image: my-app:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE = docker
+      - SPRING_DATASOURCE_URL = jdbc:postgresql://postgres_data:5432/spg
+      - DB_USERNAME = user
+      - DB_PASSWORD = user
+    depends_on:
+      - postgres
+
